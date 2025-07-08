@@ -15,6 +15,9 @@ TEST_USER_NAME = "Test User"
 SESSION_ID = None
 USER_ID = None
 
+# HTTP client with timeout
+http_client = httpx.Client(timeout=10.0)
+
 # Helper functions
 def generate_unique_email():
     """Generate a unique email for testing"""
