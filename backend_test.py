@@ -369,36 +369,38 @@ def run_all_tests():
     global TEST_USER_EMAIL
     TEST_USER_EMAIL = generate_unique_email()
     
-    try:
-        # Health check
-        test_health_endpoint()
-        
-        # User authentication tests
-        test_user_registration()
-        test_duplicate_registration()
-        test_user_login()
-        test_login_nonexistent_user()
-        test_get_user_profile()
-        test_invalid_session()
-        
-        # Plans test
-        test_get_plans()
-        
-        # Fact-checking tests
-        test_fact_check_short_text()
-        test_fact_check_medium_text()
-        test_fact_check_long_text()
-        test_fact_check_very_long_text()
-        test_get_fact_check_history()
-        
-        # Credit system test
-        test_insufficient_credits()
-        
-        print("\n✅ All tests completed successfully!\n")
-        return True
-    except Exception as e:
-        print(f"\n❌ Test failed: {str(e)}\n")
-        return False
+    tests_passed = 0
+    tests_failed = 0
+    
+    # Define all tests
+    tests = [
+        test_health_endpoint,
+        test_user_registration,
+        test_duplicate_registration,
+        test_user_login,
+        test_login_nonexistent_user,
+        test_get_user_profile,
+        test_invalid_session,
+        test_get_plans,
+        test_fact_check_short_text,
+        test_fact_check_medium_text,
+        test_fact_check_long_text,
+        test_fact_check_very_long_text,
+        test_get_fact_check_history,
+        test_insufficient_credits
+    ]
+    
+    # Run each test individually
+    for test_func in tests:
+        try:
+            test_func()
+            tests_passed += 1
+        except Exception as e:
+            tests_failed += 1
+            print(f"\n❌ Test {test_func.__name__} failed: {str(e)}\n")
+    
+    print(f"\n✅ Tests completed: {tests_passed} passed, {tests_failed} failed\n")
+    return tests_failed == 0
 
 if __name__ == "__main__":
     try:
