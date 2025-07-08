@@ -42,26 +42,34 @@ def test_user_registration():
         "name": TEST_USER_NAME
     }
     
-    response = httpx.post(f"{API_BASE_URL}/register", json=payload)
-    assert response.status_code == 200
-    data = response.json()
-    
-    # Verify response structure
-    assert "session_id" in data
-    assert "user" in data
-    assert data["user"]["email"] == email
-    assert data["user"]["name"] == TEST_USER_NAME
-    assert data["user"]["plan"] == "free"
-    assert data["user"]["credits"] == 30
-    assert "credits_reset_date" in data["user"]
-    assert "created_at" in data["user"]
-    assert data["user"]["is_active"] is True
-    
-    # Store session ID for subsequent tests
-    SESSION_ID = data["session_id"]
-    USER_ID = data["user"]["id"]
-    
-    print(f"✅ User registration test passed - Created user with email: {email}")
+    print(f"Sending registration request to {API_BASE_URL}/register with payload: {payload}")
+    try:
+        response = httpx.post(f"{API_BASE_URL}/register", json=payload)
+        print(f"Registration response status: {response.status_code}")
+        print(f"Registration response body: {response.text}")
+        
+        assert response.status_code == 200
+        data = response.json()
+        
+        # Verify response structure
+        assert "session_id" in data
+        assert "user" in data
+        assert data["user"]["email"] == email
+        assert data["user"]["name"] == TEST_USER_NAME
+        assert data["user"]["plan"] == "free"
+        assert data["user"]["credits"] == 30
+        assert "credits_reset_date" in data["user"]
+        assert "created_at" in data["user"]
+        assert data["user"]["is_active"] is True
+        
+        # Store session ID for subsequent tests
+        SESSION_ID = data["session_id"]
+        USER_ID = data["user"]["id"]
+        
+        print(f"✅ User registration test passed - Created user with email: {email}")
+    except Exception as e:
+        print(f"Registration test failed with error: {str(e)}")
+        raise
 
 def test_duplicate_registration():
     """Test registration with duplicate email"""
