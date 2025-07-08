@@ -82,7 +82,7 @@ def test_duplicate_registration():
         "name": TEST_USER_NAME
     }
     
-    response = httpx.post(f"{API_BASE_URL}/register", json=payload)
+    response = http_client.post(f"{API_BASE_URL}/register", json=payload)
     assert response.status_code == 400
     data = response.json()
     assert "detail" in data
@@ -98,7 +98,7 @@ def test_user_login():
         "email": TEST_USER_EMAIL
     }
     
-    response = httpx.post(f"{API_BASE_URL}/login", json=payload)
+    response = http_client.post(f"{API_BASE_URL}/login", json=payload)
     assert response.status_code == 200
     data = response.json()
     
@@ -118,7 +118,7 @@ def test_login_nonexistent_user():
         "email": "nonexistent_user@example.com"
     }
     
-    response = httpx.post(f"{API_BASE_URL}/login", json=payload)
+    response = http_client.post(f"{API_BASE_URL}/login", json=payload)
     assert response.status_code == 404
     data = response.json()
     assert "detail" in data
@@ -132,7 +132,7 @@ def test_get_user_profile():
         "Authorization": f"Bearer {SESSION_ID}"
     }
     
-    response = httpx.get(f"{API_BASE_URL}/user/profile", headers=headers)
+    response = http_client.get(f"{API_BASE_URL}/user/profile", headers=headers)
     assert response.status_code == 200
     data = response.json()
     
@@ -150,7 +150,7 @@ def test_invalid_session():
         "Authorization": "Bearer invalid_session_id"
     }
     
-    response = httpx.get(f"{API_BASE_URL}/user/profile", headers=headers)
+    response = http_client.get(f"{API_BASE_URL}/user/profile", headers=headers)
     assert response.status_code == 401
     data = response.json()
     assert "detail" in data
@@ -160,7 +160,7 @@ def test_invalid_session():
 
 def test_get_plans():
     """Test getting available plans"""
-    response = httpx.get(f"{API_BASE_URL}/plans")
+    response = http_client.get(f"{API_BASE_URL}/plans")
     assert response.status_code == 200
     data = response.json()
     
@@ -194,7 +194,7 @@ def test_fact_check_short_text():
         "priority": False
     }
     
-    response = httpx.post(f"{API_BASE_URL}/fact-check", json=payload, headers=headers)
+    response = http_client.post(f"{API_BASE_URL}/fact-check", json=payload, headers=headers)
     assert response.status_code == 200
     data = response.json()
     
@@ -224,7 +224,7 @@ def test_fact_check_medium_text():
         "priority": False
     }
     
-    response = httpx.post(f"{API_BASE_URL}/fact-check", json=payload, headers=headers)
+    response = http_client.post(f"{API_BASE_URL}/fact-check", json=payload, headers=headers)
     assert response.status_code == 200
     data = response.json()
     
@@ -247,7 +247,7 @@ def test_fact_check_long_text():
         "priority": False
     }
     
-    response = httpx.post(f"{API_BASE_URL}/fact-check", json=payload, headers=headers)
+    response = http_client.post(f"{API_BASE_URL}/fact-check", json=payload, headers=headers)
     assert response.status_code == 200
     data = response.json()
     
@@ -270,7 +270,7 @@ def test_fact_check_very_long_text():
         "priority": False
     }
     
-    response = httpx.post(f"{API_BASE_URL}/fact-check", json=payload, headers=headers)
+    response = http_client.post(f"{API_BASE_URL}/fact-check", json=payload, headers=headers)
     assert response.status_code == 200
     data = response.json()
     
@@ -285,7 +285,7 @@ def test_get_fact_check_history():
         "Authorization": f"Bearer {SESSION_ID}"
     }
     
-    response = httpx.get(f"{API_BASE_URL}/user/fact-checks", headers=headers)
+    response = http_client.get(f"{API_BASE_URL}/user/fact-checks", headers=headers)
     assert response.status_code == 200
     data = response.json()
     
@@ -316,7 +316,7 @@ def test_insufficient_credits():
     }
     
     # Get current user profile to check credits
-    response = httpx.get(f"{API_BASE_URL}/user/profile", headers=headers)
+    response = http_client.get(f"{API_BASE_URL}/user/profile", headers=headers)
     data = response.json()
     current_credits = data["credits"]
     
@@ -332,7 +332,7 @@ def test_insufficient_credits():
                 "text": very_long_text,
                 "priority": False
             }
-            httpx.post(f"{API_BASE_URL}/fact-check", json=payload, headers=headers)
+            http_client.post(f"{API_BASE_URL}/fact-check", json=payload, headers=headers)
     
     # Now try with a small request that should still fail
     payload = {
@@ -340,7 +340,7 @@ def test_insufficient_credits():
         "priority": False
     }
     
-    response = httpx.post(f"{API_BASE_URL}/fact-check", json=payload, headers=headers)
+    response = http_client.post(f"{API_BASE_URL}/fact-check", json=payload, headers=headers)
     
     # We expect a 402 Payment Required (insufficient credits)
     assert response.status_code == 402
