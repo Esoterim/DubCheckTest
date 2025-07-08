@@ -5,9 +5,8 @@ import time
 from datetime import datetime, timedelta
 import os
 
-# Get the backend URL from the frontend .env file
-BACKEND_URL = "https://386cc050-240b-4776-9840-a773728fe0c4.preview.emergentagent.com"
-API_BASE_URL = f"{BACKEND_URL}/api"
+# Use local URL for testing
+API_BASE_URL = "http://localhost:8001/api"
 
 # Test data
 TEST_USER_EMAIL = f"test_user_{int(time.time())}@example.com"
