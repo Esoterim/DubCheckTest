@@ -416,6 +416,10 @@ async def get_user_profile(credentials: HTTPAuthorizationCredentials = Depends(s
     if not user:
         raise HTTPException(status_code=401, detail="Invalid session")
     
+    # Remove _id field from user object before returning
+    if "_id" in user:
+        del user["_id"]
+    
     return user
 
 @app.get("/api/user/fact-checks")
