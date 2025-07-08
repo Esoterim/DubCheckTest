@@ -26,7 +26,7 @@ def generate_unique_email():
 # Tests
 def test_health_endpoint():
     """Test the health endpoint"""
-    response = httpx.get(f"{API_BASE_URL}/health")
+    response = http_client.get(f"{API_BASE_URL}/health")
     assert response.status_code == 200
     data = response.json()
     assert data["status"] == "healthy"
