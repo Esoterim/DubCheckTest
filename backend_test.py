@@ -47,7 +47,7 @@ def test_user_registration():
     
     print(f"Sending registration request to {API_BASE_URL}/register with payload: {payload}")
     try:
-        response = httpx.post(f"{API_BASE_URL}/register", json=payload)
+        response = http_client.post(f"{API_BASE_URL}/register", json=payload)
         print(f"Registration response status: {response.status_code}")
         print(f"Registration response body: {response.text}")
         
