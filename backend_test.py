@@ -379,4 +379,10 @@ def run_all_tests():
         return False
 
 if __name__ == "__main__":
-    run_all_tests()
+    try:
+        run_all_tests()
+    except Exception as e:
+        import traceback
+        print(f"\n❌ Test failed with exception: {str(e)}")
+        print("\nTraceback:")
+        traceback.print_exc()
