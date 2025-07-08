@@ -5,8 +5,9 @@ import time
 from datetime import datetime, timedelta
 import os
 
-# Use local URL for testing
-API_BASE_URL = "http://127.0.0.1:8001/api"
+# Get the backend URL from the frontend .env file
+BACKEND_URL = "https://386cc050-240b-4776-9840-a773728fe0c4.preview.emergentagent.com"
+API_BASE_URL = f"{BACKEND_URL}/api"
 
 # Test data
 TEST_USER_EMAIL = f"test_user_{int(time.time())}@example.com"
@@ -15,7 +16,7 @@ SESSION_ID = None
 USER_ID = None
 
 # HTTP client with timeout
-http_client = httpx.Client(timeout=10.0)
+http_client = httpx.Client(timeout=30.0)
 
 # Helper functions
 def generate_unique_email():
