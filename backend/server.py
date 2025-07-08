@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import os
 from pymongo import MongoClient
-from bson import ObjectId
+from bson.objectid import ObjectId
 import uuid
 from datetime import datetime, timedelta
 import requests
