@@ -5,12 +5,22 @@ from pydantic import BaseModel
 from typing import Optional, List, Dict
 import os
 from pymongo import MongoClient
+from bson import ObjectId
 import uuid
 from datetime import datetime, timedelta
 import httpx
 import asyncio
 from emergentintegrations.llm.chat import LlmChat, UserMessage
 import json
+
+# Custom JSON encoder to handle MongoDB ObjectId
+class JSONEncoder(json.JSONEncoder):
+    def default(self, o):
+        if isinstance(o, ObjectId):
+            return str(o)
+        if isinstance(o, datetime):
+            return o.isoformat()
+        return json.JSONEncoder.default(self, o)
 
 app = FastAPI(title="DubCheck API", version="1.0.0")
 
