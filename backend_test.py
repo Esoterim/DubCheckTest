@@ -319,28 +319,39 @@ def test_insufficient_credits():
     response = http_client.get(f"{API_BASE_URL}/user/profile", headers=headers)
     data = response.json()
     current_credits = data["credits"]
+    print(f"Current credits: {current_credits}")
     
-    # If we have more than 20 credits, use them up with large fact checks
-    if current_credits > 20:
-        very_long_text = "The Earth is the third planet from the Sun and the only astronomical object known to harbor life. " * 60
-        
-        # Calculate how many requests we need to use up credits
-        requests_needed = current_credits // 5
-        
-        for i in range(requests_needed):
-            payload = {
-                "text": very_long_text,
-                "priority": False
-            }
-            http_client.post(f"{API_BASE_URL}/fact-check", json=payload, headers=headers)
+    # Use up all credits with a series of requests
+    very_long_text = "The Earth is the third planet from the Sun and the only astronomical object known to harbor life. " * 60
     
-    # Now try with a small request that should still fail
+    # Calculate how many requests we need to use up credits
+    requests_needed = (current_credits // 5) + 1  # Add 1 to ensure we use all credits
+    
+    print(f"Making {requests_needed} requests to use up credits")
+    for i in range(requests_needed):
+        payload = {
+            "text": very_long_text,
+            "priority": False
+        }
+        try:
+            response = http_client.post(f"{API_BASE_URL}/fact-check", json=payload, headers=headers)
+            print(f"Request {i+1}: Status {response.status_code}")
+            
+            # If we've already run out of credits, we can stop
+            if response.status_code == 402:
+                print("Already out of credits, stopping")
+                break
+        except Exception as e:
+            print(f"Error in request {i+1}: {str(e)}")
+    
+    # Now try with a small request that should fail
     payload = {
         "text": "This is a test.",
         "priority": False
     }
     
     response = http_client.post(f"{API_BASE_URL}/fact-check", json=payload, headers=headers)
+    print(f"Final test request status: {response.status_code}")
     
     # We expect a 402 Payment Required (insufficient credits)
     assert response.status_code == 402
