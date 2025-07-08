@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 import os
 
 # Use local URL for testing
-API_BASE_URL = "http://0.0.0.0:8001/api"
+API_BASE_URL = "http://127.0.0.1:8001/api"
 
 # Test data
 TEST_USER_EMAIL = f"test_user_{int(time.time())}@example.com"
