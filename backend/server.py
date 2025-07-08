@@ -321,6 +321,10 @@ async def register_user(request: Request):
     
     sessions_collection.insert_one(session)
     
+    # Remove _id field from user object before returning
+    if "_id" in user:
+        del user["_id"]
+    
     return {"session_id": session_id, "user": user}
 
 @app.post("/api/login")
